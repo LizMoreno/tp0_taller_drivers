@@ -1,0 +1,1 @@
+cmd_/home/liz/Escritorio/taller-drivers/chardevice.ko := ld -r -m elf_x86_64  -z max-page-size=0x200000 -T ./scripts/module-common.lds --build-id  -o /home/liz/Escritorio/taller-drivers/chardevice.ko /home/liz/Escritorio/taller-drivers/chardevice.o /home/liz/Escritorio/taller-drivers/chardevice.mod.o ;  true
