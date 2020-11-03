@@ -27,7 +27,6 @@ static ssize_t device_write(struct file *, const char *, size_t, loff_t *);
 static int Major; /*El FS para saber que driver usar necesita un Major Number*/
 static int Device_Open = 0;
 static char msg[BUF_LEN];
-//static int msg_length = 0;
 
 static char *msg_Ptr; 
 
@@ -36,7 +35,7 @@ static struct file_operations fops = {
 	.read = device_read,
 	.write = device_write,
 	.open = device_open,
-        .release = device_release
+     .release = device_release
 };
 
 /*
@@ -71,6 +70,7 @@ void cleanup_module(void)
      * Unregister the device
      */
     unregister_chrdev(Major, DEVICE_NAME);
+    printk(KERN_INFO "Driver desregistrado \n") ;
 }
 
 /*
@@ -148,7 +148,7 @@ static ssize_t device_write(struct file *filp, const char *tmp, size_t length, l
 
 La función copy_from_user devuelve el número de bytes que no se pudieron copiar. En caso de éxito, esto será cero.
 Si no se pudieron copiar algunos datos, esta función rellenará los datos copiados al tamaño solicitado usando cero bytes*/
-
+/*
    size_t maxdatalen = 30, ncopied;
    uint8_t databuf[maxdatalen]; 
 
@@ -169,6 +169,29 @@ Si no se pudieron copiar algunos datos, esta función rellenará los datos copia
     printk("data para usuario: %s\n", databuf);
 
     return length;
+    */
+    
+   int i;
+   int clave = 3;
+   #ifdef DEBUG
+        printk(KERN_INFO "device_write(%p,%s,%d)",filp,tmp,length);
+   #endif 
+    for(i=0;i<length && i<BUF_LEN;i++){
+        get_user(msg[i], tmp+i);
+        if(msg[i] >= 'a' && msg[i] <= 'z'){    //aplico el cifrado cesar        
+            msg[i] = msg[i] + clave;            
+            if(msg[i] > 'z'){
+				msg[i] = msg[i] - 'z' + 'a' - 1;}
+        } else if(msg[i] >= 'A' && msg[i]<= 'Z') {
+            msg[i] = msg[i] + clave;			
+			if(msg[i] > 'Z'){
+				msg[i] = msg[i] - 'Z' + 'A' - 1;
+			}
+			
+        }
 
+    }
+
+    msg_Ptr = msg;
+    return i;
 }
-

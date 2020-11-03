@@ -1,0 +1,1 @@
+cmd_/home/alumno/tp0_taller_drivers/char_device/chardevice.mod := { echo  /home/alumno/tp0_taller_drivers/char_device/chardevice.o; echo; } > /home/alumno/tp0_taller_drivers/char_device/chardevice.mod
